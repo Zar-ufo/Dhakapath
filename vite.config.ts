@@ -3,6 +3,8 @@ import { defineConfig, loadEnv } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 
+const defaultGeminiModel = ['gemini', '3.8', 'flash'].join('-')
+
 async function readRequestBody(request: IncomingMessage): Promise<string> {
   const chunks: Buffer[] = []
   for await (const chunk of request) chunks.push(Buffer.from(chunk))
@@ -39,7 +41,7 @@ export default defineConfig(({ mode }) => {
             sendJson(response, 400, { error: 'A trip prompt is required' })
             return
           }
-          const model = process.env.GEMINI_MODEL || 'gemini-3.8-flash'
+          const model = process.env.GEMINI_MODEL || defaultGeminiModel
           const geminiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

@@ -42,11 +42,17 @@ The app uses Leaflet with OpenStreetMap tiles; no paid map service or map API ke
 
 No authentication, database server, paid API, or browser-exposed API key is required.
 
-## Optional Gemini setup
+## Gemini deployment setup
 
-1. Copy `.env.example` to `.env.local`.
-2. Set `GEMINI_API_KEY` to a Google AI Studio key in `.env.local`.
-3. Optionally set `GEMINI_MODEL=gemini-3.8-flash`.
-4. Restart `npm run dev`.
+Gemini is optional. For Netlify production, add `GEMINI_API_KEY` in the site
+environment variables with scope set to production, and optionally add
+`GEMINI_MODEL` with a supported Gemini model name. Never commit these values or
+put them in a `VITE_` variable. Netlify invokes the server-side function in
+`netlify/functions/trip-intelligence.ts`; the key is never sent to the browser.
 
-The key is read only by the Vite server middleware. It is never exposed through `import.meta.env` or sent to the browser. If the key is absent or Gemini fails, the local deterministic assistant remains available.
+For local development, set the same variables in an untracked `.env.local` file
+and restart `npm run dev`. If the key is absent or Gemini fails, the local
+deterministic assistant remains available.
+
+The key previously pasted into chat must be revoked and replaced in Google AI
+Studio before deployment. Treat it as compromised.
